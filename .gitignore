@@ -1,0 +1,14 @@
+data
+models
+extdata
+logs
+presentations
+webinar
+webinar.zip
+export
+**/*.png
+**/*.rda
+olds
+.Rhistory
+*.Rproj
+.Rproj.user
