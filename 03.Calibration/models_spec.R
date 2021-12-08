@@ -15,9 +15,9 @@ tune::tunable(lm_spec) # No one... what a shame XD
 
 # Generalized Linear Model
 #-+-+-+-+-+-+-+-+-+-+-+-+-+-
-glm_spec <- parsnip::linear_reg(penalty = tune::tune("penalty_lm"),
-                                mixture = tune::tune("mixture_lm")) %>%
-  parsnip::set_engine(engine = "glmnet")
+glm_spec <- parsnip::linear_reg(penalty = tune::tune(),
+                                mixture = tune::tune()) %>%
+  parsnip::set_engine(engine = "glmnet", family = Gamma)
 
 # Which hyper parameters could be tuned ?
 tune::tunable(glm_spec)

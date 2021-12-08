@@ -4,6 +4,8 @@ data("train_data")
 data("test_data")
 data("out_of_sample")
 
+# TODO 212 !!!
+
 dpin_form <- names(train_data) %>%
   grep(pattern = "^dpin", x = ., value = T) %>%
   paste(collapse = " + ")

@@ -11,6 +11,7 @@
 rm(list = ls())
 library(magrittr)
 source(file = "helper/plot_desc.R")
+source(file = here::here("globals", "globals-models.R"))
 data("dataset_original")
 
 
@@ -33,7 +34,7 @@ GH_threshold <- 5
 dataset_cleaned_phs1 <- dataset_original %>%
   dplyr::filter(bodyweight >=350 & bodyweight <= 1000) %>%
   dplyr::filter(milk_yield >=10 & milk_yield <= 60) %>%
-  dplyr::filter(dim <= 364)
+  dplyr::filter(dim <= 365)
 
 plot_desc(dataset_cleaned_phs1)
 
@@ -51,8 +52,10 @@ plot_desc(dataset_cleaned_phs1)
 ## Do the species need to be separated?
 #++++++++++++++++++++++++++++++++++++#
 
+dpin <- paste0("d", pin212_name)
+
 spectra_pca <- dataset_cleaned_phs1 %>%
-  dplyr::select(dplyr::starts_with("dpin")) %>%
+  dplyr::select(dplyr::all_of(dpin)) %>%
   FactoMineR::PCA(graph = F)
   # FactoMineR::PCA(quali.sup = 1)
 
@@ -85,15 +88,27 @@ spectra_tbl_grp <- dataset_cleaned_phs1 %>%
 
 spectra_tbl_lst <- spectra_tbl_grp %>%
   dplyr::group_split() %>%
-  setNames(dplyr::group_keys(spectra_tbl_grp) %>% dplyr::pull())
+  setNames(dplyr::group_keys(spectra_tbl_grp) %>%
+             dplyr::pull())
 
 ## Compute PCA / group
 spectra_pca_lst <-  spectra_tbl_lst %>%
   purrr::map(.f = function(tbl){
       tbl %>%
-        dplyr::select(dplyr::starts_with("dpin")) %>%
+        dplyr::select(dplyr::all_of(dpin)) %>%
         FactoMineR::PCA(graph = F, ncp = Npcs)
   })
+
+pca_holstein <- spectra_pca_lst$Holstein
+pca_holstein$ind$coord
+factoextra::fviz_pca_ind(
+  pca_holstein,
+  label = "none",
+  habillage = factor(spectra_tbl_lst$Holstein$provider),
+  axes = c(2, 3)
+  )
+
+
 
 ## Compute Mahalanobis distance / group
 mahalanobis_lst <- spectra_pca_lst %>%
@@ -137,9 +152,45 @@ dataset_cleaned <- spectra_tbl_lst %>%
 
 plot_desc(dataset_cleaned)
 
+# Test RMSE
+# TODO put RMSE functions in a single file to source.
+data("pls_test")
+mdl <- pls_test
+
+rmse <- function(d, m){
+  tibble::tibble(
+    prd = predict(m, newdata = d, ncomp = 15) %>% drop,
+    tth = d$bodyweight
+  )  %>%
+    yardstick::rmse(truth = tth, estimate = prd)
+}
+
+rmse_byprovider <- function(d, m, by = "provider"){
+  d %>%
+    dplyr::group_by(provider) %>%
+    dplyr::group_map(.f = function(d, k){
+      tibble::tibble(
+        prd = predict(m, newdata = d, ncomp = 15) %>% drop,
+        tth = d$bodyweight
+      ) %>%
+        yardstick::rmse(truth = tth, estimate = prd) %>%
+        tibble::add_column(provider = k, .before = 1)
+    }) %>%
+    purrr::reduce(dplyr::bind_rows)
+}
+
+with(dataset_cleaned,{
+  table(breed, provider)
+})
+rmse_byprovider(dataset_cleaned, mdl)
+
+
+source(file = "helper/plot_desc2.R")
+plot_desc2(dataset_cleaned)
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
 # Save
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
 
-save(dataset_cleaned, file = "data/dataset_cleaned.rda")
+dataset_cleaned_phs1 <- dataset_cleaned
+save(dataset_cleaned_phs1, file = "data/dataset_cleaned_phs1.rda")

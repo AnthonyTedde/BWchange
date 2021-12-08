@@ -1,22 +1,25 @@
 library(magrittr)
 
-data("train_data")
+data("training_data")
+source("globals/globals-models.R")
+
+dpins <- paste0("d", pin212_name)
 
 
-predictors_set <- c("milk_yield", "dim", "parity") %>%
-  c(names(train_data) %>% grep(pattern = "^dpin", x = ., value = T))
-
-
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
+#-------------------------------------------------------------------------------
 # Base recipe ####
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
+#-------------------------------------------------------------------------------
 
-base_recipe <- recipes::recipe(x = train_data) %>%
+base_recipe <- recipes::recipe(x = train_data_tune) %>%
   recipes::update_role(bodyweight, new_role = "outcome") %>%
   recipes::update_role(milk_yield, dim, parity) %>%
-  recipes::update_role(dplyr::starts_with("dpin")) %>%
-  recipes::step_poly(dim, degree = tune::tune("degree_dim")) %>%
-  recipes::step_poly(milk_yield, degree = tune::tune("degree_my")) %>%
+  recipes::update_role(dplyr::all_of(dpins)) %>%
+  recipes::step_log(dim) %>%
+  recipes::step_interact(terms = ~dim:milk_yield) %>%
+  recipes::step_interact(terms = ~parity:milk_yield) %>%
+
+  # recipes::step_poly(dim, degree = tune::tune("degree_dim")) %>%
+  # recipes::step_poly(milk_yield, degree = tune::tune("degree_my")) %>%
   recipes::step_normalize(recipes::all_numeric_predictors())
 
 
@@ -73,6 +76,7 @@ save(pca_recipe,
 save(filter_recipe,
      file = here::here("data", "filter_recipe.rda"),
      compress = "xz")
+
 save(base_season_recipe,
      file = here::here("data", "base_season_recipe.rda"),
      compress = "xz")

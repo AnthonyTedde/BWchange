@@ -48,7 +48,7 @@ dataset_original %>%
 ##
 dataset_original %<>%
   dplyr::mutate(
-    expl_id = ifelse(is.na(expl_id), initial_dataset, expl_id)
+    expl_id = ifelse(is.na(expl_id), provider, expl_id)
   )
 
 dataset_original %>%
@@ -67,8 +67,10 @@ dataset_original %>%
 # Remove record without BW of MY
 ##
 dataset_original %<>%
-  dplyr::filter(dplyr::across(-c("project"), .fns = ~ ! is.na(.)))
-
+  dplyr::filter(dplyr::across(-c("project", "lactose_rate",
+                                 "protein_rate", "fat_rate"),
+                              .fns = ~ ! is.na(.)))
+dim(dataset_original)
 
 #####################
 # Save

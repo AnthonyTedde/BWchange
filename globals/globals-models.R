@@ -1,9 +1,11 @@
-ntrees <- 2L
+library(magrittr)
+
+ntrees <- 500L
 ncores <- 5L
 max_pls <- max_mtry <- 15L
-init_bayes <- 20L
-tune_iter <- 10L
-last_noimproved <- 2L
+init_bayes <- 15L
+tune_iter <- 50L
+last_noimproved <- 10L
 verbose_opt <- T
 
 pinstep <- (5010.15 - 925.66) / (1060 - 1)
@@ -25,4 +27,6 @@ pin212_wave <- pin212_boundary %>%
   `[`(pinall, .)
 
 pin212_name <- pin212_wave %>% names
+pin277_name <- paste0("pin", stringr::str_pad(c(2:175, 199:230, 470:540),
+                                              width = 4, pad = 0))
 

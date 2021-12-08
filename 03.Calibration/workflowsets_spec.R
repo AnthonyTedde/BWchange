@@ -10,10 +10,10 @@ data("base_recipe")
 data("pls_recipe")
 data("pca_recipe")
 data("filter_recipe")
-data("base_season_recipe")
-data("pls_season_recipe")
-data("pca_season_recipe")
-data("filter_season_recipe")
+# data("base_season_recipe")
+# data("pls_season_recipe")
+# data("pca_season_recipe")
+# data("filter_season_recipe")
 
 ## Load the models specifications
 data("lm_spec")
@@ -71,20 +71,24 @@ update_map <- function(wfls, pattern, ...){
 
 wflset_linear <- workflowsets::workflow_set(
   preproc = list(
-    pls = pls_recipe,
-    pca = pca_recipe,
-    cor = filter_recipe
+    pls = pls_recipe
+    # pca = pca_recipe
+    # cor = filter_recipe
   ),
   models = list(
-    lm = lm_spec,
-    glm = glm_spec
+    lm = lm_spec
+    # glm = glm_spec
   ),
   cross = T
 )
 
 wflset_linear %<>% update_map(
   pattern = "^(?:pls|pca)",
-  num_comp = dials::num_comp(c(1L, 15L))
+  num_comp = dials::num_comp(c(6L, 15L))
+) %>%
+  update_map(
+  pattern = "^(?:pls|pca)",
+  degree_dim = dials::num_comp(c(1L, 5L))
 )
 
 # Check ([[1]], just for an example)
@@ -98,9 +102,9 @@ wflset_linear$option[[1]]$param_info$object
 # Specify
 wflset_trees <- workflowsets::workflow_set(
   preproc = list(
-    pls = pls_recipe,
-    pca = pca_recipe,
-    cor = filter_recipe
+    pls = pls_recipe
+    # pca = pca_recipe,
+    # cor = filter_recipe
   ),
   models = list(
     rf = rf_spec,
@@ -153,20 +157,20 @@ wflset_neighbor$option[[1]]$param_info$object
 wflset_SVM <- workflowsets::workflow_set(
   preproc = list(
     pls = pls_recipe,
-    pca = pca_recipe,
+    # pca = pca_recipe,
     cor = filter_recipe
   ),
   models = list(
     linearsvn = linearSVM_spec,
-    polysvm = polySVM_spec,
-    rbfsvm = rbfSVM_spec
+    polysvm = polySVM_spec
+    # rbfsvm = rbfSVM_spec
   ),
   cross = T
 )
 
 wflset_SVM %<>% update_map(
   pattern = "^(?:pls|pca)",
-  num_comp = dials::num_comp(c(1L, 15L))
+  num_comp = dials::num_comp(c(6L, 15L))
 )
 
 wflset_SVM$option[[1]]$param_info$object
