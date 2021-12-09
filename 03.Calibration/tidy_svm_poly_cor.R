@@ -21,9 +21,7 @@ dpins <- paste0("d", pin212_name)
 
 #
 # nproc in globals/globals-models.R
-# ICI
-# cl <- parallel::makePSOCKcluster(nproc)
-cl <- parallel::makePSOCKcluster(2)
+cl <- parallel::makePSOCKcluster(nproc)
 doParallel::registerDoParallel(cl)
 
 # ------------------------------------------------------------------------------
@@ -79,15 +77,11 @@ set.seed(42)
 search_res_svm_poly_cor <- tune::tune_bayes(
   svm_poly_cor_wfl,
   resamples = train_cv_partition,
-  #ICI
-  # iter = 200,
-  iter = 1,
-  # ICI
-  # initial = 30,
-  initial = 5,
+  iter = 200,
+  initial = 30,
   metrics = yardstick::metric_set(yardstick::rmse),
   param_info = mdl_param_updtd,
-  control = tune::control_bayes(verbose = T, no_improve = 15)
+  control = tune::control_bayes(verbose = T, no_improve = 25)
 )
 
 # ------------------------------------------------------------------------------
