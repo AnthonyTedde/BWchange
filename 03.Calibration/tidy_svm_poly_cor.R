@@ -23,7 +23,7 @@ dpins <- paste0("d", pin212_name)
 # nproc in globals/globals-models.R
 # ICI
 # cl <- parallel::makePSOCKcluster(nproc)
-cl <- parallel::makePSOCKcluster(1)
+cl <- parallel::makePSOCKcluster(2)
 doParallel::registerDoParallel(cl)
 
 # ------------------------------------------------------------------------------
