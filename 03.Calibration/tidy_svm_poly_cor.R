@@ -19,10 +19,12 @@ dpins <- paste0("d", pin212_name)
 # Set parallel ####
 # ------------------------------------------------------------------------------
 
-library(doParallel)
+#
 # nproc in globals/globals-models.R
-cl <- makePSOCKcluster(nproc)
-registerDoParallel(cl)
+# ICI
+# cl <- parallel::makePSOCKcluster(nproc)
+cl <- parallel::makePSOCKcluster(1)
+doParallel::registerDoParallel(cl)
 
 # ------------------------------------------------------------------------------
 # Base recipe ####
@@ -77,8 +79,12 @@ set.seed(42)
 search_res_svm_poly_cor <- tune::tune_bayes(
   svm_poly_cor_wfl,
   resamples = train_cv_partition,
-  iter = 200,
-  initial = 30,
+  #ICI
+  # iter = 200,
+  iter = 1,
+  # ICI
+  # initial = 30,
+  initial = 5,
   metrics = yardstick::metric_set(yardstick::rmse),
   param_info = mdl_param_updtd,
   control = tune::control_bayes(verbose = T, no_improve = 15)
