@@ -4,7 +4,8 @@ packages_lst <- c("glue", "pls", "tibble", "stringr", "rsample", "parsnip",
                   "tidymodels", "tidyverse", "kernlab")
 
 
-install.packages(pkgs = packages_lst)
+install.packages(pkgs = packages_lst,
+                 repos = "https://www.freestatistics.org/cran/")
 
 # Install from BioConductor project
 BiocManager::install('mixOmics')
