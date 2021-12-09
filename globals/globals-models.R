@@ -1,5 +1,14 @@
 library(magrittr)
 
+source("globals/version.R")
+
+if(dev){
+  nproc <- 5
+}else{
+  #CECI
+  nproc <- 20
+}
+
 ntrees <- 500L
 ncores <- 5L
 max_pls <- max_mtry <- 15L
