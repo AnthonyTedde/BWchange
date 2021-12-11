@@ -169,28 +169,12 @@ mlp_spec <- parsnip::mlp(
 # Save ####
 #-------------------------------------------------------------------------------
 
-grep(pattern = "\\_spec", ls(), value = T)
 
-save(lm_spec,
-     file = here::here("data", "lm_spec.rda"),
-     compress = "xz")
-save(glm_spec,
-     file = here::here("data", "glm_spec.rda"),
-     compress = "xz")
-save(rf_spec,
-     file = here::here("data", "rf_spec.rda"),
-     compress = "xz")
-save(xgb_spec,
-     file = here::here("data", "xgb_spec.rda"),
-     compress = "xz")
-save(knn_spec,
-     file = here::here("data", "knn_spec.rda"),
-     compress = "xz")
-save(linearSVM_spec,
-     file = here::here("data", "linearSVM_spec.rda"),
-     compress = "xz")
-save(polySVM_spec,
-     file = here::here("data", "polySVM_spec.rda"),
-     compress = "xz")
-save(rbfSVM_spec, file = here::here("data", "rbfSVM_spec.rda"),
-     compress = "xz")
+# All specification variables ends by _spec.
+grep(pattern = "\\_spec", ls(), value = T) %>%
+  for(spec in .){
+    message(glue::glue("Save model {spec}."))
+    save(list = spec,
+         file = here::here("data", glue::glue("{spec}.rda")),
+         compress = "xz")
+  }
