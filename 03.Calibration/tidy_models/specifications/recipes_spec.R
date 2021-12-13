@@ -16,6 +16,14 @@ dpins <- paste0("d", pin212_name)
 #
 #------------------------------------------------------------------------------#
 
+benchmark_recipe <- recipes::recipe(x = training_data) %>%
+  recipes::update_role(bodyweight, new_role = "outcome") %>%
+  recipes::update_role(milk_yield, dim, parity_fct) %>%
+  recipes::step_dummy(parity_fct) %>%
+  recipes::step_normalize(recipes::all_numeric_predictors()) %>%
+  recipes::step_ns(dim, deg_free = tune::tune(id = "deg_free_dim")) %>%
+  recipes::step_ns(milk_yield, deg_free = tune::tune(id = "deg_free_my"))
+
 bare_recipe <- recipes::recipe(x = training_data) %>%
   recipes::update_role(bodyweight, new_role = "outcome") %>%
   recipes::update_role(milk_yield, dim, parity_fct) %>%
@@ -98,6 +106,7 @@ recipes_cor_lst <- lapply(recipes_lst, FUN = function(recipe){
 #------------------------------------------------------------------------------#
 
 recipes_all_lst <- c(
+  list(benchmark_recipe = benchmark_recipe),
   recipes_lst,
   recipes_cor_lst,
   recipes_pca_lst,
