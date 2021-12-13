@@ -2,13 +2,13 @@ rm(list = ls())
 library(magrittr)
 
 
-#-------------------------------------------------------------------------------
+#------------------------------------------------------------------------------#
 # Linear based models ####
-#-------------------------------------------------------------------------------
+#------------------------------------------------------------------------------#
 
 
 # Ordinary least square
-#---------------------
+#------------------------#
 
 lm_spec <- parsnip::linear_reg() %>%
   parsnip::set_engine("lm")
@@ -18,7 +18,7 @@ tune::tunable(lm_spec) # No one... what a shame XD
 
 
 # Generalized Linear Model
-#---------------------
+#---------------------------#
 
 glm_spec <- parsnip::linear_reg(penalty = tune::tune(),
                                 mixture = tune::tune()) %>%
@@ -29,7 +29,7 @@ tune::tunable(glm_spec) # penalty and mixture.
 
 
 # Partial least square
-#---------------------
+#-----------------------#
 
 tune::tunable(plsmod::pls() %>% parsnip::set_engine("mixOmics"))
 
@@ -40,13 +40,13 @@ pls_spec <- plsmod::pls(
   parsnip::set_engine("mixOmics") %>%
   parsnip::set_mode("regression")
 
-#-------------------------------------------------------------------------------
-# Trees based methods ####
-#-------------------------------------------------------------------------------
 
+#------------------------------------------------------------------------------#
+# Trees based methods ####
+#------------------------------------------------------------------------------#
 
 # Random forest
-#---------------------
+#----------------#
 
 rf_spec <- parsnip::rand_forest(
   mtry = tune::tune(),
@@ -61,7 +61,7 @@ tune::tunable(rf_spec) #mtry, trees, min_n
 
 
 # XgBoost
-#---------------------
+#----------#
 
 xgb_spec <- parsnip::boost_tree(
   tree_depth = tune::tune(),
@@ -80,13 +80,13 @@ xgb_spec <- parsnip::boost_tree(
 tune::tunable(xgb_spec)
 
 
-#-------------------------------------------------------------------------------
+#------------------------------------------------------------------------------#
 # Distance based methods ####
-#-------------------------------------------------------------------------------
+#------------------------------------------------------------------------------#
 
 
 # K nearest neighbor
-#---------------------
+#---------------------#
 
 knn_spec <- parsnip::nearest_neighbor(
   neighbors = tune::tune(),
@@ -100,13 +100,13 @@ knn_spec <- parsnip::nearest_neighbor(
 tune::tunable(knn_spec)
 
 
-#-------------------------------------------------------------------------------
+#------------------------------------------------------------------------------#
 # Support vector machine ####
-#-------------------------------------------------------------------------------
+#------------------------------------------------------------------------------#
 
 
 # Linear SVM
-#---------------------
+#-------------#
 
 # Which hyper parameters could be tuned ?
 tune::tunable(parsnip::svm_linear())
@@ -120,7 +120,7 @@ svm_linear_spec <- parsnip::svm_linear(
 
 
 # Polynomial SVM
-#---------------------
+#-----------------#
 
 # Which hyper parameters could be tuned ?
 tune::tunable(parsnip::svm_poly())
@@ -136,7 +136,7 @@ svm_poly_spec <- parsnip::svm_poly(
 
 
 # Radial basis SVM
-#---------------------
+#-------------------#
 
 # Which hyper parameters could be tuned ?
 tune::tunable(parsnip::svm_rbf())
@@ -150,9 +150,9 @@ svm_rbf_spec <- parsnip::svm_rbf(
   parsnip::set_engine("kernlab")
 
 
-#-------------------------------------------------------------------------------
+#------------------------------------------------------------------------------#
 # Artificial Neural Net ####
-#-------------------------------------------------------------------------------
+#------------------------------------------------------------------------------#
 
 tune::tunable(parsnip::mlp(engine = "keras"))
 
@@ -165,16 +165,20 @@ mlp_spec <- parsnip::mlp(
   parsnip::set_mode("regression") %>%
   parsnip::set_engine("keras")
 
-#-------------------------------------------------------------------------------
+#------------------------------------------------------------------------------#
 # Save ####
-#-------------------------------------------------------------------------------
+#------------------------------------------------------------------------------#
 
+
+model_spec_names <- grep(pattern = "\\_spec", ls(), value = T)
 
 # All specification variables ends by _spec.
-grep(pattern = "\\_spec", ls(), value = T) %>%
+model_spec_names %>%
   for(spec in .){
     message(glue::glue("Save model {spec}."))
     save(list = spec,
          file = here::here("data", glue::glue("{spec}.rda")),
          compress = "xz")
   }
+
+save(model_spec_names, file = "data/model_spec_names.rda")
