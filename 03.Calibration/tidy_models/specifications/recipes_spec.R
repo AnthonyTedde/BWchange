@@ -6,7 +6,7 @@ source("globals/globals-models.R")
 dpins <- paste0("d", pin212_name)
 
 
-#-------------------------------------------------------------------------------
+#------------------------------------------------------------------------------#
 # Bare, base and interaction recipes ####
 #
 # Bare is the skeleton. Base is the base.
@@ -14,7 +14,7 @@ dpins <- paste0("d", pin212_name)
 #
 # See the file workflows specification for the effective usage.
 #
-#-------------------------------------------------------------------------------
+#------------------------------------------------------------------------------#
 
 bare_recipe <- recipes::recipe(x = training_data) %>%
   recipes::update_role(bodyweight, new_role = "outcome") %>%
@@ -40,12 +40,12 @@ recipes_lst <- list(
 rm(bare_recipe, base_recipe, base_interaction_recipe, training_data)
 
 
-#-------------------------------------------------------------------------------
+#------------------------------------------------------------------------------#
 # Add dimensionality reduction step #####
-#-------------------------------------------------------------------------------
+#------------------------------------------------------------------------------#
 
-# PLS
-#---------------------
+# Partial Least Square
+#-----------------------#
 
 recipes_pls_lst <- lapply(recipes_lst, FUN = function(recipe){
   recipe %>%
@@ -60,8 +60,8 @@ recipes_pls_lst <- lapply(recipes_lst, FUN = function(recipe){
                          x = names(recipes_lst)))
 
 
-# PCA
-#---------------------
+# Principal Components Analysis
+#--------------------------------#
 
 recipes_pca_lst <- lapply(recipes_lst, FUN = function(recipe){
   recipe %>%
@@ -76,12 +76,12 @@ recipes_pca_lst <- lapply(recipes_lst, FUN = function(recipe){
 # TODO: Add isomap step.
 
 
-#-------------------------------------------------------------------------------
+#------------------------------------------------------------------------------#
 # Add feature selection step #####
-#-------------------------------------------------------------------------------
+#------------------------------------------------------------------------------#
 
 # correlation
-#---------------------
+#--------------#
 
 recipes_cor_lst <- lapply(recipes_lst, FUN = function(recipe){
   recipe %>%
@@ -93,9 +93,9 @@ recipes_cor_lst <- lapply(recipes_lst, FUN = function(recipe){
                          x = names(recipes_lst)))
 
 
-#-------------------------------------------------------------------------------
+#------------------------------------------------------------------------------#
 # bind all lists together and save ####
-#-------------------------------------------------------------------------------
+#------------------------------------------------------------------------------#
 
 recipes_all_lst <- c(
   recipes_lst,
@@ -104,9 +104,14 @@ recipes_all_lst <- c(
   recipes_pls_lst
 )
 
+# Save the recipes objects
 for(n in names(recipes_all_lst)){
   assign(n, recipes_all_lst[[n]])
   save(list = n,
        file = here::here("data", glue::glue("{n}.rda")),
        compress = "xz")
 }
+
+# Save the names
+recipe_names <- names(recipes_all_lst)
+save(recipe_names, file = "data/recipe_names.rda")
