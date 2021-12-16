@@ -96,7 +96,7 @@ nonlinear_wflst <- workflowsets::workflow_set(
     xgb = xgb_spec,
     knn = knn_spec,
     svm_linear = svm_linear_spec,
-    svm_poly_spec = svm_poly_spec,
+    svm_poly = svm_poly_spec,
     svm_rbf = svm_rbf_spec,
     mlp = mlp_spec
   ),
