@@ -6,7 +6,7 @@ if(dev){
   nproc <- 5
 }else{
   #CECI
-  nproc <- 20
+  nproc <- 10
 }
 
 ntrees <- 500L
