@@ -9,6 +9,8 @@ library(magrittr)
 data("wfl_names")
 data("train_cv_partition")
 
+source("globals/globals-models.R")
+
 if(file.exists("data/wfl_done.rda")){
   data("wfl_done")
 }else{
@@ -19,6 +21,14 @@ if(file.exists("data/wfl_done.rda")){
 wfl_to_execute <- setdiff(wfl_names, wfl_done)
 
 
+# ------------------------------------------------------------------------------
+# Set parallel ####
+# ------------------------------------------------------------------------------
+
+#
+# nproc in globals/globals-models.R
+cl <- parallel::makePSOCKcluster(nproc)
+doParallel::registerDoParallel(cl)
 
 # ------------------------------------------------------------------------------
 # Range of value for Hyperparameters
@@ -64,15 +74,15 @@ for(wfl in wfl_to_execute){
   search_res_pls <- tune::tune_bayes(
     workflow,
     resamples = train_cv_partition,
-    # ICI
-    # iter = 200,
-    iter = 2,
-    # ICI
-    # initial = init,
-    initial = 5,
+    iter = 200,
+    initial = init,
     metrics = yardstick::metric_set(yardstick::rmse),
     param_info = parameters,
-    control = tune::control_bayes(verbose = T, no_improve = 10)
+    control = tune::control_bayes(verbose = T,
+                                  no_improve = 25,
+                                  seed = 1010,
+                                  save_workflow = T,
+                                  parallel_over = "resamples")
   )
 
   # Save the state of computation and model results
