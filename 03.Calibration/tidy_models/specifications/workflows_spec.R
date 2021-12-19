@@ -67,7 +67,6 @@ pls_wflst <- workflowsets::workflow_set(
   cross = T
 )
 
-tune::tunable(pls_wflst)
 
 linear_wflst <- dplyr::bind_rows(glm_wflst, pls_wflst)
 
