@@ -1,3 +1,4 @@
+library(tidymodels)
 rm(list = ls())
 library(magrittr)
 
