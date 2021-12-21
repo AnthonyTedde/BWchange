@@ -1,6 +1,7 @@
 rm(list = ls())
 library(magrittr)
 library(tidymodels)
+library(plsmod)
 
 
 #-------------------------------------------------------------------------------
@@ -46,6 +47,9 @@ p <- list(
 )
 
 for(wfl in wfl_to_execute){
+  message("-------------------------------------------------------------------")
+  message(glue::glue("IS RUNNING {wfl}"))
+  message("-------------------------------------------------------------------")
   data(list = wfl)
   workflow <- get(wfl)
 
