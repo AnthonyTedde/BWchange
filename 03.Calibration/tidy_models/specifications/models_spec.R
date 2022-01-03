@@ -159,11 +159,12 @@ tune::tunable(parsnip::mlp(engine = "keras"))
 mlp_spec <- parsnip::mlp(
   hidden_units = tune::tune(),
   penalty = tune::tune(),
-  epochs = tune::tune(),
-  activation = tune::tune()
+  epochs = tune::tune()
+  # activation = tune::tune()
 ) %>%
   parsnip::set_mode("regression") %>%
-  parsnip::set_engine("keras")
+  parsnip::set_engine("nnet")
+  # parsnip::set_engine("keras")
 
 #------------------------------------------------------------------------------#
 # Save ####
