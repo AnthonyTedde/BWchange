@@ -28,7 +28,8 @@ column_in_common <- mget(dataset_nm) %>%
   grep(pattern = "^(?!pin|dpin)", value = T, perl = T)
 length(column_in_common)
 
-spectral_variable <- c(paste0("d", pin212_name))
+# spectral_variable <- c(paste0("d", pin212_name))
+# spectral_variable <- c(paste0("d", pin212_name))
 # spectral_variable <- c(pin277_name, paste0("d", pin277_name))
 
 mapout <- c("BW_GpE", "BW_HM_ch1", "BW_HM_fr1", "BW_HM_seenorest_2021",
@@ -50,6 +51,7 @@ dataset_original <- mget(dataset_nm) %>%
     parity_4 = ifelse(parity_full < 4, parity_full, 4),
     parity_fct = parity %>% factor(levels = 1:3,
                                    labels = c("first", "second", "third+")),
+    parity_ord = ordered(parity_fct),
     wol_ord = cut(dim, breaks = seq(0,
                                     max(dim) + 7 - (max(dim) %% 7),
                                     by = 7), ordered_result = T)
@@ -77,11 +79,14 @@ dataset_spectra <- dataset_original %>%
                 ))
 
 dataset_original %<>%
-  dplyr::select(id0, provider, parity_full, parity, parity_4, parity_fct,
+  dplyr::select(id0, provider,
+                parity_full, parity, parity_4, parity_fct, parity_ord,
                 wol_ord, initial_dataset, hemisphere, test_MIR_season,
                 yield_tot,
                 dplyr::all_of(column_in_common),
-                dplyr::all_of(spectral_variable))
+                dplyr::starts_with("pin"),
+                dplyr::starts_with("dpin"))
+                # dplyr::all_of(spectral_variable))
 
 # ------------------------------------------------------------------------------
 # Some Graph
