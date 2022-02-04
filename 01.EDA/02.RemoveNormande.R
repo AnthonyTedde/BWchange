@@ -36,39 +36,12 @@ with(dataset_original,{
 # ------------------------------------------------------------------------------
 # Remove inapropriate yield_tot
 # ------------------------------------------------------------------------------
-library(splines)
-library(pls)
-data("pls_test")
-mdl <- pls_test
-
-rmse <- function(d, m){
-  tibble::tibble(
-    prd = predict(m, newdata = d, ncomp = 15) %>% drop,
-    tth = d$bodyweight
-  )  %>%
-    yardstick::rmse(truth = tth, estimate = prd)
-}
-
-rmse_byprovider <- function(d, m, by = "provider"){
-  d %>%
-    dplyr::group_by(provider) %>%
-    dplyr::group_map(.f = function(d, k){
-      tibble::tibble(
-        prd = predict(m, newdata = d, ncomp = 15) %>% drop,
-        tth = d$bodyweight
-      ) %>%
-        yardstick::rmse(truth = tth, estimate = prd) %>%
-        tibble::add_column(provider = k, .before = 1)
-    }) %>%
-    purrr::reduce(dplyr::bind_rows)
-}
-
 
 table(dataset_original$provider)
-rmse(d = dataset_original %>%
-       dplyr::filter(provider == "seenorest"),
-     m = mdl)
-rmse_byprovider(d = dataset_original, m = mdl)
+# rmse(d = dataset_original %>%
+#        dplyr::filter(provider == "seenorest"),
+#      m = mdl)
+# rmse_byprovider(d = dataset_original, m = mdl)
 
 with(dataset_original,{
   all(is.na(yield_tot[provider == "utrobe"]))
@@ -91,10 +64,12 @@ dataset_original %<>%
 with(dataset_original,{
   table(breed, provider)
 })
-rmse_byprovider(dataset_original, mdl)
+# rmse_byprovider(dataset_original, mdl)
 
 # ------------------------------------------------------------------------------
 # Save
 # ------------------------------------------------------------------------------
 
 save(dataset_original, file = "data/dataset_original.rda")
+
+dim(dataset_original)

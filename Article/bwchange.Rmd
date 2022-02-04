@@ -1,0 +1,37 @@
+---
+title: "Bodyweight change"
+bibliography: references.bib
+link-citations: true
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+ 
+# Materials and methods
+
+
+## Data
+
+
+## Bodyweight equations
+
+We developed new predictive equations to estimate dairy cows' bodyweight using partial least square regressions based on the new data in the calibration sets. These equations were minor updates of those already developed in [@tedde_validation_2021] and [@soyeurt_contribution_2019], in which the authors used the milk yield, parity, days in milk, and spectrometry milk analysis to develop bodyweight predictive equations. In addition, in this study, we added natural splines to estimate better the curvilinear relationship between the dairy cows' bodyweight and dim or milk_yield variables. Furthermore, based on the known relationships between the milk_yield, parity, and milk_yield variables (ref), we investigated further these connections through linear and nonlinear interaction, called tensor product smooth using gam models. The equations are summarized in table X.
+
+\begin{table}
+\begin{tabular}{cc}
+\hline
+equation id & equation term \\
+\hline
+benchmark & $dim + ns(my) + ns(parity)$ \\
+benchmark & $pls(dim + my + parity + MIR_212)$ \\
+\hline
+\end{tabular}
+\end{table}
+
+
+# Results

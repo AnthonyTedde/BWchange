@@ -8,6 +8,8 @@ data("dataset_original")
 # Look by dataset
 ################################################################################
 
+dim(dataset_original)
+
 dataset_original %>%
   dplyr::select(an_id, provider, dplyr::contains("dpin")) %>%
   naniar::gg_miss_fct(fct = provider)
@@ -15,14 +17,15 @@ dataset_original %>%
 # Remove the rows with missing spectra
 
 dataset_original %<>%
-  tidyr::drop_na(dplyr::contains("dpin"))
+  tidyr::drop_na(dplyr::contains("dpin")) %>%
+  tidyr::drop_na(dplyr::contains("pin"))
 dim(dataset_original)
 
 # Is there some NA amongs spectra ?
 dataset_original %>%
   dplyr::select(dplyr::starts_with("pin")) %>%
   naniar::pct_complete()
-# No more.
+# No more. 100% complete
 
 ################################################################################
 # Other than spectra
@@ -31,7 +34,7 @@ dataset_original %>%
 # Percentage of column with at least one NA in it.
 dataset_original %>%
   naniar::pct_miss_var()
-#~ > 0.52%
+#~ > 0.23%
 
 
 ############################################

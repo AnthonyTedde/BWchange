@@ -1,0 +1,160 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\title{Bodyweight change}
+\author{}
+\date{\vspace{-2.5em}}
+
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Bodyweight change},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newlength{\cslentryspacingunit} % times entry-spacing
+\setlength{\cslentryspacingunit}{\parskip}
+\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
+ {% don't indent paragraphs
+  \setlength{\parindent}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1
+  \let\oldpar\par
+  \def\par{\hangindent=\cslhangindent\oldpar}
+  \fi
+  % set entry spacing
+  \setlength{\parskip}{#2\cslentryspacingunit}
+ }%
+ {}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{#1\hfill\break}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\begin{document}
+\maketitle
+
+\hypertarget{introduction}{%
+\section{Introduction}\label{introduction}}
+
+\hypertarget{materials-and-methods}{%
+\section{Materials and methods}\label{materials-and-methods}}
+
+\hypertarget{data}{%
+\subsection{Data}\label{data}}
+
+\hypertarget{bodyweight-equations}{%
+\subsection{Bodyweight equations}\label{bodyweight-equations}}
+
+We developed new predictive equations to estimate dairy cows' bodyweight
+using partial least square regressions based on the new data in the
+calibration sets. These equations were minor updates of those already
+developed in (\protect\hyperlink{ref-tedde_validation_2021}{Tedde et al.
+2021}) and (\protect\hyperlink{ref-soyeurt_contribution_2019}{Soyeurt et
+al. 2019}), in which the authors used the milk yield, parity, days in
+milk, and spectrometry milk analysis to develop bodyweight predictive
+equations. In addition, in this study, we added natural splines to
+estimate better the curvilinear relationship between the dairy cows'
+bodyweight and dim or milk\_yield variables. Furthermore, based on the
+known relationships between the milk\_yield, parity, and milk\_yield
+variables (ref), we investigated further these connections through
+linear and nonlinear interaction, called tensor product smooth using gam
+models. The equations are summarized in table X.
+
+\begin{table}
+\begin{center}
+\begin{tabular}{cc}
+\hline
+equation id & equation term \\
+\hline
+benchmark & $dim + ns(my) + ns(parity)$ \\
+benchmark & $pls(dim + my + parity + MIR_212)$ \\
+\hline
+\end{tabular}
+\caption{trucmuch}
+\end{center}
+\end{table}
+
+\hypertarget{results}{%
+\section*{Results}\label{results}}
+\addcontentsline{toc}{section}{Results}
+
+\hypertarget{refs}{}
+\begin{CSLReferences}{1}{0}
+\leavevmode\vadjust pre{\hypertarget{ref-soyeurt_contribution_2019}{}}%
+Soyeurt, H., E. Froidmont, I. Dufrasne, D. Hailemariam, Z. Wang, C.
+Bertozzi, F. G. Colinet, F. Dehareng, and N. Gengler. 2019.
+{``Contribution of Milk Mid-Infrared Spectrum to Improve the Accuracy of
+Test-Day Body Weight Predicted from Stage, Lactation Number, Month of
+Test and Milk Yield.''} \emph{Livest. Sci.} 227 (September): 82--89.
+\url{https://doi.org/10.1016/j.livsci.2019.07.007}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-tedde_validation_2021}{}}%
+Tedde, Anthony, Clément Grelet, Phuong N. Ho, Jennie E. Pryce, Dagnachew
+Hailemariam, Zhiquan Wang, Graham Plastow, et al. 2021. {``Validation of
+{Dairy} {Cow} {Bodyweight} {Prediction} {Using} {Traits} {Easily}
+{Recorded} by {Dairy} {Herd} {Improvement} {Organizations} and {Its}
+{Potential} {Improvement} {Using} {Feature} {Selection} {Algorithms}.''}
+\emph{Animals} 11 (5): 1288. \url{https://doi.org/10.3390/ani11051288}.
+
+\end{CSLReferences}
+
+\end{document}

@@ -1,18 +1,20 @@
 rm(list = ls())
-library(bodyweight.data)
+# library(bodyweight.data)
 library(magrittr)
-data("pls_fit_bst")
-data("pls_fit_bst2")
-data("pls_fit_onese")
-data("pls_lst")
-data("pls_test")
-data("xgb_fit_bst")
-data("xgb_fit_onese")
-
+# data("pls_fit_bst")
+# data("pls_fit_bst2")
+# data("pls_fit_onese")
+# data("pls_lst")
+# data("pls_test")
+# data("xgb_fit_bst")
+# data("xgb_fit_onese")
+#
 data("training_data")
-data("dataset_cleaned")
-data("testing_data")
-data("out_of_sample_bw")
+data("testing_swiss_data")
+data("pls_mod")
+# data("dataset_cleaned")
+# data("testing_data")
+# data("out_of_sample_bw")
 
 ## TODO: Add all variables to the initial dataset.
 ## DONE: Check the computation of the drift correction
@@ -80,7 +82,7 @@ out_of_sample_bw %<>%
 # data("pls_test")
 # data("pls_spct")
 # data("glm_test")
-data("pls_lst")
+# data("pls_lst")
 # data("gam_test")
 # data("gam_pls")
 # data("gam_vip")
@@ -90,6 +92,7 @@ data("pls_lst")
 # data("gam_FA2")
 # data("gam_FA3")
 # data("pls_test_noparity")
+data("pls_mod")
 
 # Add comp column ####
 # ncomp <- (cumsum(pls_spct$Xvar /  pls_spct$Xtotvar) < .99) %>%
@@ -130,19 +133,20 @@ data("pls_lst")
 # model <- gam_FA3
 # model <- pls_test_noparity
 # model <- gam_FA1_noparity
-model <- pls_test
-model <- pls_lst$HSO_vip
-model <- pls_lst$HSO_beta
-model <- pls_fit_bst
-model <- pls_fit_onese
-model <- xgb_fit_bst
-model <- xgb_fit_onese
-model <- pls_fit_bst2
-model <- lm(bodyweight ~ dim + parity, data = training_data)
+# model <- pls_test
+# model <- pls_lst$HSO_vip
+# model <- pls_lst$HSO_beta
+# model <- pls_fit_bst
+# model <- pls_fit_onese
+# model <- xgb_fit_bst
+# model <- xgb_fit_onese
+# model <- pls_fit_bst2
+# model <- lm(bodyweight ~ dim + parity, data = training_data)
+model <- pls_mod
 
 
 # model <- pls_lst$HSO_all
-ncomp <- 10
+ncomp <- 15
 # ncomp <- 6
 
 
@@ -183,8 +187,8 @@ rmse <- function(dat){
   }
 }
 
-rmse(training_data)
-rmse(out_of_sample_mir)
+# rmse(training_data)
+# rmse(out_of_sample_mir)
 # rmse(test_data_seenorest)
 
 # Create summary statistics datasets ####

@@ -16,7 +16,7 @@ augment_df <- function(datain){
 
       reg <- mgcv::gam(bodyweight ~ s(dim, k = nrow(dat)/5),
                        data=dat,
-                       family = Gamma(link = "log"),
+                       family = gaussian(),
                        method = "REML")
 
       # reg <- mgcv::gam(bodyweight ~ s(dim, bs="cr", k = 10), data=dat,
@@ -136,30 +136,35 @@ dataset_original %<>%
   dplyr::arrange(id0)
 
 # test the values
-data("pls_test")
-mdl <- pls_test
-rmse_byprovider <- function(d, m, by = "provider"){
-  d %>%
-    dplyr::group_by(provider) %>%
-    dplyr::group_map(.f = function(d, k){
-      tibble::tibble(
-        prd = predict(m, newdata = d, ncomp = 15) %>% drop,
-        tth = d$bodyweight
-      ) %>%
-        yardstick::rmse(truth = tth, estimate = prd) %>%
-        tibble::add_column(provider = k, .before = 1)
-    }) %>%
-    purrr::reduce(dplyr::bind_rows)
-}
+# data("pls_test")
+# mdl <- pls_test
+# rmse_byprovider <- function(d, m, by = "provider"){
+#   d %>%
+#     dplyr::group_by(provider) %>%
+#     dplyr::group_map(.f = function(d, k){
+#       tibble::tibble(
+#         prd = predict(m, newdata = d, ncomp = 15) %>% drop,
+#         tth = d$bodyweight
+#       ) %>%
+#         yardstick::rmse(truth = tth, estimate = prd) %>%
+#         tibble::add_column(provider = k, .before = 1)
+#     }) %>%
+#     purrr::reduce(dplyr::bind_rows)
+# }
 
 
 with(dataset_original,{
   table(breed, provider)
 })
 
-rmse_byprovider(d = dataset_original, m = mdl)
+# rmse_byprovider(d = dataset_original, m = mdl)
 
-source(file = here::here("helper", "plot_desc2.R"))
-plot_desc2(dataset_original %>% dplyr::filter(breed == "Holstein"))
+# source(file = here::here("helper", "plot_desc2.R"))
+# plot_desc2(dataset_original %>% dplyr::filter(breed == "Holstein"))
+
+dataset_original %<>%
+  dplyr::mutate(bodyweight = as.vector(bodyweight)) %>%
+  dplyr::select(-mdl_prd)
+
 
 save(dataset_original, file = "data/dataset_original.rda")
