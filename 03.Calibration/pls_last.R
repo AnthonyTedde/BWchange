@@ -5,8 +5,6 @@ library(pls)
 library(foreach)
 
 data("training_data")
-data("testing_swiss_data")
-data("stratified_kfolds")
 
 training <- training_data
 
