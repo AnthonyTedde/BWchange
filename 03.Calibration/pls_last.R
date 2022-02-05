@@ -3,6 +3,7 @@ library(ggplot2)
 library(magrittr)
 library(pls)
 library(foreach)
+library(magrittr)
 
 data("training_data")
 
@@ -11,13 +12,13 @@ training <- training_data
 # ------------------------------------------------------------------------------
 # Formula ####
 # ------------------------------------------------------------------------------
-pls_mir_var <- grep("^dpin", names(training), value = T) |>
+pls_mir_var <- grep("^dpin", names(training), value = T) %>%
   paste(collapse = " + ")
 left_hand <- paste("ns(milk_yield, df = 4)",
                    "ns(dim, df = 4)",
                    "parity_ord", pls_mir_var,
                    sep = " + ")
-form <- paste("bodyweight", left_hand, sep = " ~ ") |> formula()
+form <- paste("bodyweight", left_hand, sep = " ~ ") %>% formula()
 
 # Preamble data
 N <- 2
@@ -40,7 +41,7 @@ MCCV_perf <- foreach::foreach(i = iterators::iter(options_lst, by = 'row'),
     strata <- training$strata_uid
     idx <- lapply(table(strata), FUN = function(d){
       1:d %in% sample(d, size = round(i$prop*d))
-    }) |> unlist(use.names = F)
+    }) %>% unlist(use.names = F)
     csset <- (1:nrow(training))[idx[sort(order(strata))]]
     # csset <<- sample(1:n, size = round(n * i$prop))
     vsset <- setdiff(1:nrow(training), csset)
@@ -56,8 +57,8 @@ MCCV_perf <- foreach::foreach(i = iterators::iter(options_lst, by = 'row'),
     p_v <- predict(pls_mod,
                     ncomp = 1:ncomp,
                     newdata = vl,
-                    type = "response") |> drop()
-    p_c <- fitted(pls_mod) |> drop()
+                    type = "response") %>% drop()
+    p_c <- fitted(pls_mod) %>% drop()
     PRESS_v <- (p_v - vl[, "bodyweight", drop = T])^2
     PRESS_c <- (p_c - tr[, "bodyweight", drop = T])^2
     RMSE_v <- sqrt(colSums(PRESS_v) / length(vsset))
