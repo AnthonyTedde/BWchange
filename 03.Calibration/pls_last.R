@@ -21,10 +21,10 @@ left_hand <- paste("ns(milk_yield, df = 4)",
 form <- paste("bodyweight", left_hand, sep = " ~ ") %>% formula()
 
 # Preamble data
-N <- 2
+N <- 10000
 n <- nrow(training)
 
-doMC::registerDoMC(cores = 1)
+doMC::registerDoMC(cores = 10)
 RNGkind(kind = "L'Ecuyer-CMRG")
 
 
@@ -59,19 +59,19 @@ MCCV_perf <- foreach::foreach(i = iterators::iter(options_lst, by = 'row'),
                     newdata = vl,
                     type = "response") %>% drop()
     p_c <- fitted(pls_mod) %>% drop()
-    PRESS_v <- (p_v - vl[, "bodyweight", drop = T])^2
-    PRESS_c <- (p_c - tr[, "bodyweight", drop = T])^2
-    RMSE_v <- sqrt(colSums(PRESS_v) / length(vsset))
-    RMSE_c <- sqrt(colSums(PRESS_c) / length(csset))
-    rmse_names <- paste0("RMSE", stringr::str_pad(1:ncomp, width = 3, pad = 0))
-    names(RMSE_c) <- names(RMSE_v) <- rmse_names
+    PRESS_v <- colSums((p_v - vl[, "bodyweight", drop = T])^2)
+    PRESS_c <- colSums((p_c - tr[, "bodyweight", drop = T])^2)
+    # RMSE_v <- sqrt(PRESS_v / length(vsset))
+    # RMSE_c <- sqrt(PRESS_c / length(csset))
+    press_names <- paste0("PRESS", stringr::str_pad(1:ncomp, width = 3, pad = 0))
+    names(PRESS_c) <- names(PRESS_v) <- press_names
     rbind(
       data.frame(type = "calibration", prop = i$prop, round = i$round,
                  N = N, n_cal = length(csset), n_val = length(vsset),
-                 rbind(RMSE_c), row.names = NULL),
+                 rbind(PRESS_c), row.names = NULL),
       data.frame(type = "validation", prop = i$prop, round = i$round,
                  N = N, n_cal = length(csset), n_val = length(vsset),
-                 rbind(RMSE_v), row.names = NULL)
+                 rbind(PRESS_v), row.names = NULL)
     )
   }
 
